@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_float_animate" default="compile.module.float_animate">
+    <dirname property="module.float_animate.basedir" file="${ant.file.module_float_animate}"/>
+
+    <property name="module.jdk.home.float_animate" value="${project.jdk.home}"/>
+    <property name="module.jdk.bin.float_animate" value="${project.jdk.bin}"/>
+    <property name="module.jdk.classpath.float_animate" value="${project.jdk.classpath}"/>
+
+    <property name="compiler.args.float_animate" value="${compiler.args}"/>
+
+    <property name="float_animate.output.dir" value="${module.float_animate.basedir}/../out/production/float_animate"/>
+    <property name="float_animate.testoutput.dir" value="${module.float_animate.basedir}/../out/test/float_animate"/>
+
+    <path id="float_animate.module.bootclasspath">
+        <!-- Paths to be included in compilation bootclasspath -->
+    </path>
+
+    <path id="float_animate.module.production.classpath">
+        <path refid="${module.jdk.classpath.float_animate}"/>
+        <path refid="library.unnamed.classpath"/>
+    </path>
+
+    <path id="float_animate.runtime.production.module.classpath">
+        <pathelement location="${float_animate.output.dir}"/>
+        <path refid="library.unnamed.classpath"/>
+    </path>
+
+    <path id="float_animate.module.classpath">
+        <path refid="${module.jdk.classpath.float_animate}"/>
+        <pathelement location="${float_animate.output.dir}"/>
+        <path refid="library.unnamed.classpath"/>
+    </path>
+
+    <path id="float_animate.runtime.module.classpath">
+        <pathelement location="${float_animate.testoutput.dir}"/>
+        <pathelement location="${float_animate.output.dir}"/>
+        <path refid="library.unnamed.classpath"/>
+    </path>
+
+
+    <patternset id="excluded.from.module.float_animate">
+        <patternset refid="ignored.files"/>
+    </patternset>
+
+    <patternset id="excluded.from.compilation.float_animate">
+        <patternset refid="excluded.from.module.float_animate"/>
+    </patternset>
+
+    <path id="float_animate.module.sourcepath">
+        <dirset dir="${module.float_animate.basedir}">
+            <include name="src"/>
+        </dirset>
+    </path>
+
+
+    <target name="compile.module.float_animate"
+            depends="compile.module.float_animate.production,compile.module.float_animate.tests"
+            description="Compile module float_animate"/>
+
+    <target name="compile.module.float_animate.production" depends="register.custom.compilers"
+            description="Compile module float_animate; production classes">
+        <mkdir dir="${float_animate.output.dir}"/>
+        <javac2 destdir="${float_animate.output.dir}" debug="${compiler.debug}"
+                nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true"
+                executable="${module.jdk.bin.float_animate}/javac">
+            <compilerarg line="${compiler.args.float_animate}"/>
+            <bootclasspath refid="float_animate.module.bootclasspath"/>
+            <classpath refid="float_animate.module.production.classpath"/>
+            <src refid="float_animate.module.sourcepath"/>
+            <patternset refid="excluded.from.compilation.float_animate"/>
+        </javac2>
+
+        <copy todir="${float_animate.output.dir}">
+            <fileset dir="${module.float_animate.basedir}/src">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="compile.module.float_animate.tests"
+            depends="register.custom.compilers,compile.module.float_animate.production"
+            description="compile module float_animate; test classes" unless="skip.tests"/>
+
+    <target name="clean.module.float_animate" description="cleanup module">
+        <delete dir="${float_animate.output.dir}"/>
+        <delete dir="${float_animate.testoutput.dir}"/>
+    </target>
+</project>
